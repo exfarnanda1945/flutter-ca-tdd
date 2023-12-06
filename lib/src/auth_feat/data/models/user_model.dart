@@ -33,4 +33,11 @@ class UserModel extends User {
           createdAt: createdAt ?? this.createdAt,
           name: name ?? this.name,
           avatar: avatar ?? this.avatar);
+
+  const UserModel.empty()
+      : this(
+            id: "1",
+            createdAt: "_empty.createdAt",
+            name: "_empty.name",
+            avatar: "_empty.avatar");
 }
