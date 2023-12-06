@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tdd_flutter/core/utils/typedef.dart';
 import 'package:tdd_flutter/src/auth_feat/data/models/user_model.dart';
@@ -42,6 +41,14 @@ void main() {
     test("should return a [String] with the correct data", () {
       final result = userModel.toJson();
       expect(result, equals(userJson));
+    });
+  });
+
+  group("copyWith", () {
+    test("should return a [UserModel] with the different data", () {
+      final result = userModel.copyWith(name: "Miko");
+      expect(result.name, equals("Miko"));
+      expect(result, isNot(userModel));
     });
   });
 }
