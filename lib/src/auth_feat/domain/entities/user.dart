@@ -23,5 +23,5 @@ class User extends Equatable {
 // Compare between object and id as a key
 // Whenever the Id are same, thats a same person / user
   @override
-  List<Object?> get props => [id];
+  List<Object?> get props => [id, createdAt, name, avatar];
 }
