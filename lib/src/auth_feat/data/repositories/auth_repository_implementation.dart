@@ -1,3 +1,4 @@
+import 'package:dartz/dartz.dart';
 import 'package:tdd_flutter/core/errors/base_error.dart';
 import 'package:tdd_flutter/core/utils/typedef.dart';
 import 'package:tdd_flutter/src/auth_feat/data/data_source/remote/auth_remote_data_source.dart';
@@ -7,7 +8,7 @@ import 'package:tdd_flutter/src/auth_feat/domain/repositories/auth_repository.da
 // Implement D --> dependency inversion, pass the dependency in the constructor
 
 class AuthRepositoryImplementation implements AuthRepository {
- const AuthRepositoryImplementation(this._remoteDataSource);
+  const AuthRepositoryImplementation(this._remoteDataSource);
 
   final AuthRemoteDataSource _remoteDataSource;
 
@@ -15,9 +16,10 @@ class AuthRepositoryImplementation implements AuthRepository {
   ResultFuture<BaseError, void> createUser(
       {required String createdAt,
       required String name,
-      required String avatar}) {
-    // TODO: implement createUser
-    throw UnimplementedError();
+      required String avatar}) async {
+    await _remoteDataSource.createUser(
+        createdAt: createdAt, name: name, avatar: avatar);
+    return const Right(null);
   }
 
   @override
