@@ -39,15 +39,15 @@ void main() {
         // thenReturn --> used to force dependency return a value if the function is sync/not async
         // because in this test want to return void, we gonna mimic the result to void. The function createUser return Either<BaseError, void> ,
         // so we use Right because type void in the right Either type result
-        .thenAnswer((invocation) async => const Right(unit));
+        .thenAnswer((invocation) async => const Right(null));
 
     //Act
     final result = await usecase(createUserParams);
 
     //Assert
-    // expect result from use case equals to void or Right(unit)
-    // Using dynamic for left Either because we dont know what type of error and also we wont to import BaseError from main module
-    expect(result, equals(const Right<dynamic, void>(unit)));
+    // expect result from use case equals to void or Right(null)
+    // Using dynamic for left Either because we don't know what type of error and also we wont to import BaseError from main module
+    expect(result, equals(const Right<dynamic, void>(null)));
 
     // Verify the passed argument from createUser must be same value from const createUserParams = CreateUserParams.empty();
     // Called --> verify to call createUser only once / one time.
@@ -60,3 +60,6 @@ void main() {
     verifyNoMoreInteractions(mockAuthRepo);
   });
 }
+
+
+
