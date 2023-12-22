@@ -71,10 +71,12 @@ void main() {
   });
 
   group("Lists User", () {
+    final emptyUserList = [const UserModel.empty()];
+
     test("Should call [AuthRemoteDataSource] and return Successful List<User>",
         () async {
       when(() => mockRemote.listUser())
-          .thenAnswer((invocation) async => [const UserModel.empty()]);
+          .thenAnswer((invocation) async => emptyUserList);
 
       final result = await repoImpl.listUser();
 
