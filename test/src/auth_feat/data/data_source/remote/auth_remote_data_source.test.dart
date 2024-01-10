@@ -48,5 +48,24 @@ void main() {
 
       verifyNoMoreInteractions(httpClient);
     });
+
+    test("should complete successfully when the status code is 200 or 201",
+        () async {
+      when(() => httpClient.post(any(), body: any(named: 'body')))
+          .thenAnswer((invocation) async => http.Response('Success', 200));
+
+      final result = authRemoteDs.createUser(
+          createdAt: "createdAt", name: "name", avatar: "avatar");
+      expect(result, isA<void>());
+
+      verify(() => httpClient.post(Uri.parse("${Constants.BASE_URL}users"),
+          body: jsonEncode({
+            "createdAt": "createdAt",
+            "name": "name",
+            "avatar": "avatar"
+          }))).called(1);
+
+      verifyNoMoreInteractions(httpClient);
+    });
   });
 }
