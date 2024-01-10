@@ -28,12 +28,15 @@ void main() {
           .thenAnswer((invocation) async => http.Response('Success', 201));
 
       final call = authRemoteDs.createUser;
+      // final result =authRemoteDs.createUser(createdAt: "createdAt", name: "name", avatar: "avatar");
 
       // Expect when call AuthRemoteDataSourceImpl.createUser, the process its completes
       expect(
           // invoke createUser
           call(createdAt: "createdAt", name: "name", avatar: "avatar"),
           completes);
+
+      // expect(result,isA<void>());
 
       // Verify the body raw is a same with json raw passed when httpClient.post invoke
       verify(() => httpClient.post(Uri.parse("${Constants.BASE_URL}users"),
