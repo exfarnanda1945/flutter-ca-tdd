@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:tdd_flutter/core/errors/server_error.dart';
 import 'package:tdd_flutter/core/utils/constants.dart';
+import 'package:tdd_flutter/core/utils/typedef.dart';
 import 'package:tdd_flutter/src/auth_feat/data/models/user_model.dart';
 
 import 'auth_remote_data_source.dart';
@@ -13,22 +14,32 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client _client;
 
   @override
-  Future<void> createUser(
-      {required String createdAt,
-      required String name,
-      required String avatar}) async {
-    final result = await _client.post(Uri.parse("${Constants.BASE_URL}users"),
-        body: jsonEncode(
-            {"createdAt": createdAt, "name": name, "avatar": avatar}));
+  Future<void> createUser({required String createdAt,
+    required String name,
+    required String avatar}) async {
+    try {
+      final result = await _client.post(Uri.parse("${Constants.BASE_URL}users"),
+          body: jsonEncode(
+              {"createdAt": createdAt, "name": name, "avatar": avatar}));
 
-    if (result.statusCode != 200 && result.statusCode != 201) {
-      throw ServerError(message: result.body, statusCode: result.statusCode);
+      if (result.statusCode != 200 && result.statusCode != 201) {
+        throw ServerError(message: result.body, statusCode: result.statusCode);
+      }
+    } on ServerError {
+      rethrow;
+    } catch (e) {
+      throw ServerError(message: e.toString(), statusCode: 505);
     }
   }
 
   @override
-  Future<List<UserModel>> listUser() {
-    // TODO: implement listUser
-    throw UnimplementedError();
+  Future<List<UserModel>> listUser() async {
+    final response = await _client.get(Uri.parse("${Constants.BASE_URL}users"));
+    final toDataMap = List<DataMap>.from(jsonDecode(response.body) as List);
+    final result = toDataMap
+        .map((item) => UserModel.fromMap(item))
+        .toList();
+
+    return result;
   }
 }

@@ -7,6 +7,7 @@ import 'package:tdd_flutter/core/errors/server_error.dart';
 import 'package:tdd_flutter/core/utils/constants.dart';
 import 'package:tdd_flutter/src/auth_feat/data/data_source/remote/auth_remote_data_source.dart';
 import 'package:tdd_flutter/src/auth_feat/data/data_source/remote/auth_remote_data_source_impl.dart';
+import 'package:tdd_flutter/src/auth_feat/data/models/user_model.dart';
 
 import 'mock_http_client.dart';
 
@@ -112,6 +113,23 @@ void main() {
                     {"createdAt": "", "name": "name", "avatar": "avatar"})))
             .called(1);
 
+        verifyNoMoreInteractions(httpClient);
+      },
+    );
+  });
+
+  group("Get List of Users", () {
+    test(
+      "should return List<User> model when the status code 200",
+      () async {
+        when(() => httpClient.get(any())).thenAnswer((invocation) async =>
+            http.Response(jsonEncode([const UserModel.empty().toMap()]), 200));
+
+        final result = await authRemoteDs.listUser();
+
+        expect(result, equals([const UserModel.empty()]));
+        verify(() => httpClient.get(Uri.parse("${Constants.BASE_URL}users")))
+            .called(1);
         verifyNoMoreInteractions(httpClient);
       },
     );
