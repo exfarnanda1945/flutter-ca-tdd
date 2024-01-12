@@ -14,9 +14,10 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   final http.Client _client;
 
   @override
-  Future<void> createUser({required String createdAt,
-    required String name,
-    required String avatar}) async {
+  Future<void> createUser(
+      {required String createdAt,
+      required String name,
+      required String avatar}) async {
     try {
       final result = await _client.post(Uri.parse("${Constants.BASE_URL}users"),
           body: jsonEncode(
@@ -34,12 +35,23 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
 
   @override
   Future<List<UserModel>> listUser() async {
-    final response = await _client.get(Uri.parse("${Constants.BASE_URL}users"));
-    final toDataMap = List<DataMap>.from(jsonDecode(response.body) as List);
-    final result = toDataMap
-        .map((item) => UserModel.fromMap(item))
-        .toList();
+    try {
+      final response =
+          await _client.get(Uri.parse("${Constants.BASE_URL}users"));
 
-    return result;
+      if (response.statusCode != 200 && response.statusCode != 201) {
+        throw ServerError(
+            message: response.body, statusCode: response.statusCode);
+      }
+
+      final toDataMap = List<DataMap>.from(jsonDecode(response.body) as List);
+      final result = toDataMap.map((item) => UserModel.fromMap(item)).toList();
+
+      return result;
+    } on ServerError {
+      rethrow;
+    } catch (e) {
+      throw ServerError(message: e.toString(), statusCode: 505);
+    }
   }
 }

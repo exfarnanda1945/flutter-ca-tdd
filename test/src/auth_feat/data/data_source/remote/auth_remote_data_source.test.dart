@@ -95,7 +95,7 @@ void main() {
     });
 
     test(
-      "should throws API Exception and status code 400",
+      "should throws ServerError and status code 400",
       () async {
         when(() => httpClient.post(any(), body: any(named: "body"))).thenAnswer(
             (invocation) async => http.Response("Bad Request", 400));
@@ -128,6 +128,24 @@ void main() {
         final result = await authRemoteDs.listUser();
 
         expect(result, equals([const UserModel.empty()]));
+        verify(() => httpClient.get(Uri.parse("${Constants.BASE_URL}users")))
+            .called(1);
+        verifyNoMoreInteractions(httpClient);
+      },
+    );
+
+    test(
+      "should return ServerError when the status code not 200",
+      () async {
+        when(() => httpClient.get(any())).thenAnswer(
+            (invocation) async => http.Response("Internal Server Error", 500));
+
+        final call = authRemoteDs.listUser();
+
+        expect(
+            () async => call,
+            throwsA(const ServerError(
+                message: "Internal Server Error", statusCode: 500)));
         verify(() => httpClient.get(Uri.parse("${Constants.BASE_URL}users")))
             .called(1);
         verifyNoMoreInteractions(httpClient);
