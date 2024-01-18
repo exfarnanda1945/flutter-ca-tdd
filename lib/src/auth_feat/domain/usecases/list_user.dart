@@ -4,7 +4,7 @@ import 'package:tdd_flutter/core/utils/typedef.dart';
 import 'package:tdd_flutter/src/auth_feat/domain/entities/user.dart';
 import 'package:tdd_flutter/src/auth_feat/domain/repositories/auth_repository.dart';
 
-class ListUser extends BaseUsecase<BaseError, List<User>> {
+class ListUser extends BaseUseCase<BaseError, List<User>> {
   const ListUser(this._authRepository);
 
   final AuthRepository _authRepository;

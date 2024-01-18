@@ -5,7 +5,7 @@ import 'package:tdd_flutter/core/utils/typedef.dart';
 import 'package:tdd_flutter/src/auth_feat/domain/repositories/auth_repository.dart';
 
 class CreateUser
-    extends BaseUsecaseWithParams<BaseError, void, CreateUserParams> {
+    extends BaseUseCaseWithParams<BaseError, void, CreateUserParams> {
   const CreateUser(this._authRepository);
 
   final AuthRepository _authRepository;

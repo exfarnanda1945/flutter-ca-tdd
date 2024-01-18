@@ -1,7 +1,7 @@
 import 'package:tdd_flutter/core/utils/typedef.dart';
 
-abstract class BaseUsecase<Error, Result> {
-  const BaseUsecase();
+abstract class BaseUseCase<Error, Result> {
+  const BaseUseCase();
 
   ResultFuture<Error, Result> call();
 }
